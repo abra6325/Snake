@@ -1,48 +1,47 @@
 
-class Snake{
-    constructor(x,y,size){
-        this.x=x;
-        this.y=y;
-        this.size=size;
+class Snake {
+    constructor(x, y, size) {
+        this.x = x
+        this.y = y
+        this.size = size
         this.tail = [{x:this.x, y:this.y}]
-        this.rotateX=0;
-        this.rotateY=1;
+        this.rotateX = 0
+        this.rotateY = 1
     }
-    move(){
-        let newRect;
-        if(this.rotateX = 1){
+
+    move() {
+        let newRect
+        if (this.rotateX == 1) {
             newRect = {
-                x: this.tail[this.tail.length - 1].x +this.size,
+                
+                x: this.tail[this.tail.length - 1].x + this.size,
                 y: this.tail[this.tail.length - 1].y
             }
-        }
-        else if(this.rotateX = -1){
+        } else if (this.rotateX == -1) {
             newRect = {
                 x: this.tail[this.tail.length - 1].x - this.size,
                 y: this.tail[this.tail.length - 1].y
             }
-        }
-        else if(this.rotateY = 1){
+        } else if (this.rotateY == 1) {
             newRect = {
                 x: this.tail[this.tail.length - 1].x,
-                y: this.tail[this.tail.length - 1].y + this.size,
+                y: this.tail[this.tail.length - 1].y + this.size
             }
-        }
-        else if(this.rotateY = -1){
+        } else if (this.rotateY == -1) {
             newRect = {
                 x: this.tail[this.tail.length - 1].x,
-                y: this.tail[this.tail.length - 1].y - this.size,
+                y: this.tail[this.tail.length - 1].y - this.size
             }
         }
+        
         this.tail.shift()
         this.tail.push(newRect)
-
     }
+}
 
-};
 class Apple{
     constructor(){
-        var isTouching;
+        let isTouching;
         while(true){
             isTouching = false;
             this.x = Math.floor(Math.random()*canvas.width/snake.size)*snake.size;
@@ -52,20 +51,31 @@ class Apple{
                     isTouching = true;
                 }
             }
+            
+            this.color="pink"
+            this.size=snake.size
             if(!isTouching){
                 break;
             }
-            this.color="pink"
-            this.size=snake.size
-
         }
     }
 }
 
-var canvas = document.getElementById('canvas');
+var canvas = document.getElementById('Canvas');
 var snake= new Snake(20,20,20);
 var apple = new Apple();
 var canvasContext = canvas.getContext('2d');
+document.getElementById("randomtext").innerHTML = randomtext();
+function randomtext() {
+    var randomtxt=[
+        "I am smart",
+        "Play my game",
+        "Youtube is gud",
+        "SNAKE",
+        "I drink water",
+    ];
+    return randomtxt[Math.floor((Math.random() * 3.99))];
+}
 window.onload = () => {
     gameLoop();
 
@@ -82,12 +92,13 @@ function update(){
     console.log("update");
     snake.move();
     eatApple();
+    checkWall();
 };
 function eatApple(){
     if(snake.tail[snake.tail.length-1].x==apple.x && snake.tail[snake.tail.length-1].y==apple.y){
         snake.tail[snake.tail.length]={x:apple.x,y:apple.y}
         apple = new Apple();
-
+        
     }    
 };
 function draw(){
@@ -105,6 +116,22 @@ function draw(){
 function createRect(x,y,width,height,color){
     canvasContext.fillStyle = color;
     canvasContext.fillRect(x,y,width,height);
+}
+function checkWall(){
+    let headTail = snake.tail[snake.tail.length-1];
+    if(headTail.x==-snake.size){
+        headTail.x = canvas.width-snake.size
+    }
+    else if (headTail.x==canvas.width){
+        headTail.x = 0
+    }
+    else if(headTail.y==-snake.size){
+        headTail.y = canvas.height - snake.size
+    }
+    else if(headTail.y == canvas.height){
+        headTail.y = 0
+    }
+    
 }
 window.addEventListener("keydown",(event)=>{
     setTimeout(()=>{
